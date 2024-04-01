@@ -9,3 +9,6 @@ class InputLayerNeuron(INeuron):
 
     def get_value(self) -> float|None:
         return self.out_value
+
+    def error_propagation(self, error, learning_rate):
+        pass

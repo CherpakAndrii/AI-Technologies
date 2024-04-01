@@ -13,5 +13,6 @@ class Synapse:
         value = self.source.get_value()
         return value * self.weight if value is not None else None
 
-    def change_weights(self, error, learning_rate):
+    def error_propagation(self, error, learning_rate):
         self.weight += learning_rate * error * self.source.get_value()
+        self.source.error_propagation(error*self.weight, learning_rate)

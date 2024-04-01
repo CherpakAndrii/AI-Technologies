@@ -1,10 +1,11 @@
-import numpy as np
+from math import fabs
 
 from interfaces.INeuralNetwork import INeuralNetwork
 from models.InputLayerNeuron import InputLayerNeuron
 from models.Neuron import Neuron
 from models.Synapse import Synapse
 from models.ThresholdActivationFunction import ThresholdActivationFunction
+from models.SigmoidActivationFunction import SigmoidActivationFunction
 
 
 class SingleNeuronParceptron(INeuralNetwork):
@@ -20,11 +21,11 @@ class SingleNeuronParceptron(INeuralNetwork):
             perfect_counter = 0
             for train_case, expected_result in zip(train_x, train_y):
                 result = self.predict(train_case)
-                if all(exp_result == real_result for exp_result, real_result in zip(expected_result, result)):
+                if all(fabs(exp_result - real_result) < 0.25 for exp_result, real_result in zip(expected_result, result)):
                     perfect_counter += 1
                 error = [(exp_result - real_result) for exp_result, real_result in zip(expected_result, result)]
                 for n, err in zip(self.output_neurons, error):
-                    n.change_weights(err, learning_rate)
+                    n.error_propagation(err, learning_rate)
 
             print("Epoch", epoch, "done, train accuracy:", perfect_counter,  '/', len(train_x))
 
@@ -34,7 +35,7 @@ class SingleNeuronParceptron(INeuralNetwork):
         for test_case, expected_result in zip(test_x, test_y):
             processed_ctr += 1
             result = self.predict(test_case)
-            if all(exp_result == real_result for exp_result, real_result in zip(expected_result, result)):
+            if all(fabs(exp_result - real_result) < 0.25 for exp_result, real_result in zip(expected_result, result)):
                 correct_ctr += 1
 
         return correct_ctr, processed_ctr

@@ -9,3 +9,6 @@ class ThresholdActivationFunction(IActivationFunction):
 
     def compute(self, inputs_sum: float) -> float:
         return 1 if inputs_sum >= self.threshold else 0
+
+    def derivative(self, output: float):
+        return 1

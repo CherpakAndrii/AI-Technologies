@@ -23,7 +23,7 @@ class Neuron(INeuron):
         # self.out_value = None
         return self.out_value#value
 
-    def change_weights(self, error, learning_rate):
-        self.bias += learning_rate * error
+    def error_propagation(self, error, learning_rate):
+        self.bias += learning_rate * error * self.activation_func.derivative(self.out_value)
         for input_synapse in self.inputs:
-            input_synapse.change_weights(error, learning_rate)
+            input_synapse.error_propagation(error, learning_rate)
