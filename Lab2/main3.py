@@ -4,22 +4,29 @@ from random import randint
 from models.Parceptron import Parceptron
 from models.SingleNeuronParceptron import SingleNeuronParceptron
 
-base_img = [
+base_img_E = (
     1,1,1,1,
     1,0,0,0,
     1,1,1,1,
     1,0,0,0,
     1,1,1,1
-]
+)
+# base_img_K = (
+#     1,0,0,1,
+#     1,0,1,0,
+#     1,1,0,0,
+#     1,0,1,0,
+#     1,0,0,1
+# )
 
 
-def showing_func(input_img: tuple[float]):
+def showing_func(input_img: tuple[float], base_img: tuple[float]):
     threshold = len(input_img) * 0.25
-    delta = calculate_delta(input_img)
+    delta = calculate_delta(input_img, base_img)
     return 1 if delta <= threshold else 0
 
 
-def calculate_delta(img: tuple[float]):
+def calculate_delta(img: tuple[float], base_img: tuple[float]) -> float:
     return sum([0 if el1 == el2 else 1 for el1, el2 in zip(img, base_img)])
 
 
@@ -29,7 +36,7 @@ def make_test_data(length: int):
     train_data = []
     train_results = []
     combinations = list(product([0, 1], repeat=length))
-    sorted_combinations = sorted(combinations, key=lambda img: calculate_delta(img))
+    sorted_combinations = sorted(combinations, key=lambda img: calculate_delta(img, base_img_E))
     selected_data = sorted_combinations[:30000] + [
         sorted_combinations[randint(30000, len(sorted_combinations) - 1)] for _ in range(10000)
     ]
@@ -56,10 +63,11 @@ def shuffle(train_x, train_y):
 
 
 if __name__ == '__main__':
-    input_size = len(base_img)
-    model = SingleNeuronParceptron(input_size)
+    input_size = len(base_img_E)
+    model = Parceptron(input_size, 1)
+    # model = SingleNeuronParceptron(input_size)
     test_data, test_results, train_data, train_results, all_combinations = make_test_data(input_size)
-    model.train(train_data, train_results, 10, 0.001)
+    model.train(train_data, train_results, 10, 0.01)
 
     # correct, processed = model.test(test_data, test_results)
     correct, processed = model.test(all_combinations, [showing_func(combination) for combination in all_combinations])
