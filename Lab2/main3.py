@@ -23,7 +23,7 @@ def make_test_data(length: int):
     train_results = []
     combinations = list(product([0, 1], repeat=length))
     sorted_combinations = sorted(combinations, key=lambda img: min([calculate_delta(img, base_img) for base_img in base_images]))
-    print(len([img for img in sorted_combinations if min([calculate_delta(img, base_img) for base_img in base_images]) <= len(img) * 0.25]))
+    # print(len([img for img in sorted_combinations if min([calculate_delta(img, base_img) for base_img in base_images]) <= len(img) * 0.25]))
     selected_data = sorted_combinations[:110000] + [
         sorted_combinations[randint(110000, len(sorted_combinations) - 1)] for _ in range(20000)
     ]
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     model = Parceptron(input_size, output_size, output_size)
     # model = SingleNeuronParceptron(input_size, output_size)
     test_data, test_results, train_data, train_results, all_combinations = make_test_data(input_size)
-    model.train(train_data, train_results, 3, 0.01)
+    model.train(train_data, train_results, 5, 0.001)
 
     correct, processed = model.test(test_data, test_results)
     # correct, processed = model.test(all_combinations, [[showing_func(combination, base_img) for base_img in base_images] for combination in all_combinations])
