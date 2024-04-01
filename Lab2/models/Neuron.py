@@ -19,6 +19,11 @@ class Neuron(INeuron):
         self.out_value = self.activation_func.compute(signals_sum + self.bias)
 
     def get_value(self) -> float|None:
-        value = self.out_value
-        self.out_value = None
-        return value
+        # value = self.out_value
+        # self.out_value = None
+        return self.out_value#value
+
+    def change_weights(self, error, learning_rate):
+        self.bias += learning_rate * error
+        for input_synapse in self.inputs:
+            input_synapse.change_weights(error, learning_rate)

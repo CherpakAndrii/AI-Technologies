@@ -12,3 +12,6 @@ class Synapse:
     def get_signal(self):
         value = self.source.get_value()
         return value * self.weight if value is not None else None
+
+    def change_weights(self, error, learning_rate):
+        self.weight += learning_rate * error * self.source.get_value()
